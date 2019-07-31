@@ -62,7 +62,7 @@ export class CarryableSystem {
           
           // Calculate the variable world-space position of the Entity from its constant user-space position.
           let objPosWorld = carryable.objPosUser
-            .clone()                          // (Clone stops the .rotate from changing pUser)
+            .clone()                          // (Clone stops the .rotate from changing objPosUser)
             .rotate(Camera.instance.rotation) // Rotate by UserRot
             .add(Camera.instance.position)    // Add UserPos
           ;
@@ -73,7 +73,7 @@ export class CarryableSystem {
       }
       else if (carryable.objPosUser !== undefined) {
         
-        // Entity was dropped, so don't care about pUser anymore.
+        // Entity was dropped, so don't care about objPosUser anymore.
         carryable.objPosUser = undefined;
       }
     }
