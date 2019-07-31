@@ -14,7 +14,7 @@ export class Carryable {
   /**
    * When the Entity is being carried, its constant user-space position. Undefined otherwise.
    */
-  public pUser: Vector3 = undefined;
+  public objPosUser: Vector3 = undefined;
   
   /**
    * Toggle whether this Carryable is being carried or not.
@@ -47,34 +47,34 @@ export class CarryableSystem {
       
       if (carryable.beingCarried) {
         
-        if (carryable.pUser === undefined) {
+        if (carryable.objPosUser === undefined) {
           
           // Grab the current world-space position of the Entity.
-          let pWorld = entity.getComponent(Transform).position;
+          let objPosWorld = entity.getComponent(Transform).position;
           
           // Calculate and save the user-space position of the Entity from its world-space position.
-          carryable.pUser = pWorld
-            .subtract(Camera.instance.position)           // Subtract U
-            .rotate(Camera.instance.rotation.conjugate()) // Unrotate by R
+          carryable.objPosUser = objPosWorld
+            .subtract(Camera.instance.position)           // Subtract UserPos
+            .rotate(Camera.instance.rotation.conjugate()) // Unrotate by UserRot
           ;
         }
         else {
           
           // Calculate the variable world-space position of the Entity from its constant user-space position.
-          let pWorld = carryable.pUser
+          let objPosWorld = carryable.objPosUser
             .clone()                          // (Clone stops the .rotate from changing pUser)
-            .rotate(Camera.instance.rotation) // Rotate by R
-            .add(Camera.instance.position)    // Add U
+            .rotate(Camera.instance.rotation) // Rotate by UserRot
+            .add(Camera.instance.position)    // Add UserPos
           ;
           
           // Move the Entity to its new world-space position.
-          entity.getComponent(Transform).position = pWorld;
+          entity.getComponent(Transform).position = objPosWorld;
         }
       }
-      else if (carryable.pUser !== undefined) {
+      else if (carryable.objPosUser !== undefined) {
         
         // Entity was dropped, so don't care about pUser anymore.
-        carryable.pUser = undefined;
+        carryable.objPosUser = undefined;
       }
     }
   }
